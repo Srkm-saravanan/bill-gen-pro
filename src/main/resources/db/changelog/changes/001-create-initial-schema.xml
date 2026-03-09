@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.24.xsd">
+
+    <changeSet id="1" author="saravanan">
+        <createTable tableName="customers">
+            <column name="id" type="BIGINT" autoIncrement="true"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="phone_number" type="VARCHAR(15)"><constraints unique="true" nullable="false"/></column>
+            <column name="name" type="VARCHAR(255)"><constraints nullable="false"/></column>
+            <column name="business_name" type="VARCHAR(255)"/>
+            <column name="gst_number" type="VARCHAR(15)"/>
+            <column name="address" type="TEXT"/>
+            <column name="customer_type" type="VARCHAR(50)"><constraints nullable="false"/></column>
+            <column name="outstanding_balance" type="DECIMAL(12, 2)" defaultValueNumeric="0.00"><constraints nullable="false"/></column>
+            <column name="credit_limit" type="DECIMAL(12, 2)"/>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+        </createTable>
+
+        <createTable tableName="products">
+            <column name="id" type="BIGINT" autoIncrement="true"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="name" type="VARCHAR(255)"><constraints nullable="false"/></column>
+            <column name="short_code" type="VARCHAR(20)"><constraints unique="true" nullable="false"/></column>
+            <column name="category" type="VARCHAR(50)"/>
+            <column name="hsn_code" type="VARCHAR(10)"><constraints nullable="false"/></column>
+            <column name="gst_percentage" type="DECIMAL(5, 2)"><constraints nullable="false"/></column>
+            <column name="unit_of_measure" type="VARCHAR(50)"><constraints nullable="false"/></column>
+            <column name="base_rate" type="DECIMAL(10, 2)"><constraints nullable="false"/></column>
+            <column name="current_stock" type="DECIMAL(10, 3)"/>
+            <column name="reorder_level" type="DECIMAL(10, 3)"/>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+        </createTable>
+
+        <createTable tableName="bills">
+            <column name="id" type="BIGINT" autoIncrement="true"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="bill_number" type="VARCHAR(50)"><constraints unique="true"/></column>
+            <column name="customer_id" type="BIGINT"/>
+            <column name="bill_type" type="VARCHAR(50)"><constraints nullable="false"/></column>
+            <column name="status" type="VARCHAR(50)"><constraints nullable="false"/></column>
+            <column name="vehicle_number" type="VARCHAR(20)"/>
+            <column name="sub_total" type="DECIMAL(12, 2)"/>
+            <column name="total_discount" type="DECIMAL(12, 2)" defaultValueNumeric="0.00"/>
+            <column name="total_taxable_value" type="DECIMAL(12, 2)"/>
+            <column name="total_cgst" type="DECIMAL(12, 2)"/>
+            <column name="total_sgst" type="DECIMAL(12, 2)"/>
+            <column name="total_igst" type="DECIMAL(12, 2)"/>
+            <column name="grand_total" type="DECIMAL(12, 2)"/>
+            <column name="cancellation_reason" type="VARCHAR(255)"/>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+        </createTable>
+
+        <createTable tableName="bill_items">
+            <column name="id" type="BIGINT" autoIncrement="true"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="bill_id" type="BIGINT"><constraints nullable="false"/></column>
+            <column name="product_id" type="BIGINT"><constraints nullable="false"/></column>
+            <column name="quantity" type="DECIMAL(10, 3)"><constraints nullable="false"/></column>
+            <column name="original_mrp" type="DECIMAL(10, 2)"><constraints nullable="false"/></column>
+            <column name="charged_rate" type="DECIMAL(10, 2)"><constraints nullable="false"/></column>
+            <column name="gst_percentage" type="DECIMAL(5, 2)"><constraints nullable="false"/></column>
+            <column name="taxable_value" type="DECIMAL(10, 2)"><constraints nullable="false"/></column>
+            <column name="cgst_amount" type="DECIMAL(10, 2)"/>
+            <column name="sgst_amount" type="DECIMAL(10, 2)"/>
+            <column name="igst_amount" type="DECIMAL(10, 2)"/>
+            <column name="total_amount" type="DECIMAL(12, 2)"><constraints nullable="false"/></column>
+        </createTable>
+
+        <createTable tableName="payment_transactions">
+            <column name="id" type="BIGINT" autoIncrement="true"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="bill_id" type="BIGINT"/>
+            <column name="customer_id" type="BIGINT"/>
+            <column name="payment_mode" type="VARCHAR(50)"><constraints nullable="false"/></column>
+            <column name="amount" type="DECIMAL(12, 2)"><constraints nullable="false"/></column>
+            <column name="transaction_reference" type="VARCHAR(255)"/>
+            <column name="payment_date" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="bills" baseColumnNames="customer_id" constraintName="fk_bill_customer" referencedTableName="customers" referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="bill_items" baseColumnNames="bill_id" constraintName="fk_item_bill" referencedTableName="bills" referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="bill_items" baseColumnNames="product_id" constraintName="fk_item_product" referencedTableName="products" referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="payment_transactions" baseColumnNames="bill_id" constraintName="fk_payment_bill" referencedTableName="bills" referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="payment_transactions" baseColumnNames="customer_id" constraintName="fk_payment_customer" referencedTableName="customers" referencedColumnNames="id"/>
+    </changeSet>
+</databaseChangeLog>
