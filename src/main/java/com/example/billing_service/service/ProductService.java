@@ -51,13 +51,11 @@ public class ProductService {
     }
 
     /**
-     * Low stock alert logic.
-     * Compares current stock against the custom reorder level for each item.
+     * Fetches products that are running low.
+     * This is the "Shopping List" for the owner to call his suppliers.
      */
     public List<Product> getLowStockAlerts() {
-        return productRepository.findAll().stream()
-                .filter(p -> p.getCurrentStock() != null && p.getReorderLevel() != null)
-                .filter(p -> p.getCurrentStock().compareTo(p.getReorderLevel()) <= 0)
-                .toList();
+        log.info("Fetching low stock alerts for inventory dashboard");
+        return productRepository.findLowStockProducts();
     }
 }
