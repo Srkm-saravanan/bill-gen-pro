@@ -6,5 +6,10 @@
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.24.xsd">
 
     <include file="db/changelog/changes/001-create-initial-schema.xml"/>
+    <include file="db/changelog/changes/002-add-inventory-fields.xml"/>
+    <include file="db/changelog/changes/003-create-suppliers-table.xml"/>
+    <include file="db/changelog/changes/004-link-product-to-supplier.xml"/>
+    <include file="db/changelog/changes/005-create-stock-entry-tables.xml"/>
+    <include file="db/changelog/changes/006-add-purchase-price-to-products.xml"/>
 
 </databaseChangeLog>

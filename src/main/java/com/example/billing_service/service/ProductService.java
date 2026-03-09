@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -56,7 +55,6 @@ public class ProductService {
      * Compares current stock against the custom reorder level for each item.
      */
     public List<Product> getLowStockAlerts() {
-        // Fetch all products where current_stock is less than or equal to reorder_level
         return productRepository.findAll().stream()
                 .filter(p -> p.getCurrentStock() != null && p.getReorderLevel() != null)
                 .filter(p -> p.getCurrentStock().compareTo(p.getReorderLevel()) <= 0)

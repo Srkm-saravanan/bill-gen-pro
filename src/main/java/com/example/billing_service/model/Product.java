@@ -52,11 +52,28 @@ public class Product {
     @Column(name = "base_rate", precision = 10, scale = 2, nullable = false)
     private BigDecimal baseRate;
 
-    @Column(name = "current_stock", precision = 10, scale = 3) // Scale 3 for weight-based items (e.g., 1.550 kg)
+    @Column(name = "current_stock", precision = 10, scale = 3)
     private BigDecimal currentStock;
 
+    // ────────────────────────────────────────────────
+    // Updated & newly added fields
+    // ────────────────────────────────────────────────
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "supplier_id")
+    private Supplier supplier;
+
     @Column(name = "reorder_level", precision = 10, scale = 3)
-    private BigDecimal reorderLevel;
+    private BigDecimal reorderLevel = BigDecimal.valueOf(10);
+
+    @Column(columnDefinition = "TEXT")
+    private String description;
+
+    @Column(name = "is_active", columnDefinition = "tinyint")
+    private Boolean isActive = true;
+
+    @Column(name = "image_url")
+    private String imageUrl;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
@@ -65,6 +82,9 @@ public class Product {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @Column(name = "purchase_price", precision = 10, scale = 2)
+    private BigDecimal purchasePrice;
 
     public enum UnitOfMeasure {
         PIECE, SET, DOZEN, KILOGRAM, PAIR, BOX

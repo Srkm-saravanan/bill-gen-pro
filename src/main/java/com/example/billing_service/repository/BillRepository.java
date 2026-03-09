@@ -26,4 +26,8 @@ public interface BillRepository extends JpaRepository<Bill, Long> {
             LocalDateTime end,
             Bill.BillStatus status
     );
+
+    // ✅ Add this method to enable date-range filtering for analytics
+    // (useful when you want bills of any status in a period)
+    List<Bill> findByCreatedAtBetween(LocalDateTime start, LocalDateTime end);
 }

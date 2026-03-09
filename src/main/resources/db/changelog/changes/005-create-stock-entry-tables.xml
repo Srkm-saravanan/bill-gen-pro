@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.24.xsd">
+
+    <changeSet id="5" author="saravanan">
+        <createTable tableName="stock_entries">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="supplier_id" type="BIGINT"/>
+            <column name="reference_number" type="VARCHAR(100)"/>
+            <column name="total_purchase_amount" type="DECIMAL(19,2)"/>
+            <column name="received_date" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+        </createTable>
+
+        <createTable tableName="stock_entry_items">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="stock_entry_id" type="BIGINT"/>
+            <column name="product_id" type="BIGINT"/>
+            <column name="quantity_received" type="DECIMAL(19,2)"/>
+            <column name="purchase_price_per_unit" type="DECIMAL(19,2)"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="stock_entries" baseColumnNames="supplier_id" constraintName="fk_stock_supplier" referencedTableName="suppliers" referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="stock_entry_items" baseColumnNames="stock_entry_id" constraintName="fk_item_stock_entry" referencedTableName="stock_entries" referencedColumnNames="id"/>
+    </changeSet>
+</databaseChangeLog>

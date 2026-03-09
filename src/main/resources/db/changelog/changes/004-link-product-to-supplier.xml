@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.24.xsd">
+
+    <changeSet id="4-supplier-id" author="saravanan">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="products" columnName="supplier_id"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="products">
+            <column name="supplier_id" type="BIGINT"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="4-reorder-level" author="saravanan">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="products" columnName="reorder_level"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="products">
+            <column name="reorder_level" type="DECIMAL(10,2)" defaultValueNumeric="10"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="4-fk" author="saravanan">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyTableName="products" foreignKeyName="fk_product_supplier"/>
+            </not>
+        </preConditions>
+        <addForeignKeyConstraint baseColumnNames="supplier_id"
+                                 baseTableName="products"
+                                 constraintName="fk_product_supplier"
+                                 referencedColumnNames="id"
+                                 referencedTableName="suppliers"/>
+    </changeSet>
+</databaseChangeLog>
